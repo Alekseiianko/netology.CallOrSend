@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CallOrSend</string>
+    <string name="call">call</string>
+    <string name="send">send</string>
+</resources>
