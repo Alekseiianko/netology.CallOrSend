@@ -12,13 +12,17 @@ import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
     Button btnCall;
     Button btnSend;
     Intent intent;
-    private static final int REQUEST_SEND_SMS = 666;
+    EditText phoneNumber;
+    EditText message;
+    String phone;
+    String text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,31 +31,27 @@ public class MainActivity extends AppCompatActivity {
 
         btnCall = findViewById(R.id.btnCall);
         btnSend = findViewById(R.id.btnSend);
+        phoneNumber = findViewById(R.id.phoneNumber);
+        message = findViewById(R.id.message);
     }
 
     public void callOrSendMethod(View view) {
+        phone = phoneNumber.getText().toString().trim();
+        text = message.getText().toString();
         switch (view.getId()) {
             case R.id.btnCall:
                 intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:+7 (495) 152-55-28"));
+                intent.setData(Uri.parse("tel:" + phone));
                 startActivity(intent);
                 break;
 
             case R.id.btnSend:
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, REQUEST_SEND_SMS);
-                } else{
-                    SmsManager smgr = SmsManager.getDefault();
-                    smgr.sendTextMessage("+79101234567",null,"Привет",null,null);
-                }
-        }
-
-//                intent = new Intent(Intent.ACTION_SENDTO);
-//                intent.setData(Uri.parse("smsto:+79101234567"));
-//                intent.putExtra("sms_body", "sms text");
-//                startActivity(intent);
-//                break;
+                intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("smsto:" + phone));
+                intent.putExtra("sms_body", text);
+                startActivity(intent);
+                break;
         }
     }
+}
 
